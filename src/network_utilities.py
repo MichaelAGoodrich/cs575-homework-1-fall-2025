@@ -39,7 +39,7 @@ def show_graph(G: nx.Graph) -> None:
         alpha=0.8)
     plt.show()
 
-def show__directed_graph(G: nx.DiGraph) -> None:
+def show_digraph(G: nx.DiGraph) -> None:
     node_positions: dict[int, tuple[float,float]] = nx.nx_pydot.graphviz_layout(G,prog='neato')
     title = 'My directed graph'
     plt.figure()
@@ -133,7 +133,7 @@ def adjacency_matrix_to_graph(adjacency_matrix: NDArray) -> nx.Graph:
         raise IllegalGraphRepresentation("Adjacency matrix had no vertices")
     
     ## Check whether k in V(j) --> j in V(k)
-    if np.array_equal(adjacency_matrix, adjacency_matrix.T):
+    if not np.array_equal(adjacency_matrix, adjacency_matrix.T):
         raise IllegalGraphRepresentation("Adjacency matrix is not symmetric") 
     
     return nx.from_numpy_array(adjacency_matrix)

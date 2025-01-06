@@ -12,6 +12,7 @@ dependencies = [
 "numpy",
 "matplotlib",
 "pydot",
+"ipykernel",
 #"graphviz",
 #"pygraphviz",
 "networkx",

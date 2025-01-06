@@ -42,6 +42,7 @@ The mandatory dependencies are
 - types-networkx (to enable networkx type hints)
 - numpy
 - matplotlib (pyplot)
+- ipykernel (for Jupyter notebooks)
 - scipy.cluster.hierarchy (to show dendrograms for future homework)
 - python-louvain (to find communities using the Louvain algorithm for future homework)
 
@@ -49,7 +50,7 @@ On my machine, these packages installed in `.venv/lib/python3.12/site-packages`.
 
 **Warning** Avoid using pygraphviz on a mac. The linking required to code written in C is sensitive to specific mac configurations. It is much more simple to use pydot instead. 
 
-**Select Python Interpreter** Open the command pallette within visual studio code. (One way to do this is to select `View -> CommandPallette`.) Select `Python:Select Interpreter`. Choose the directory with the virtual environment you just created, `Python 3.12.5 ('.venv') ./.venv/bin/pythyon' if on a mac.
+**Select Python Interpreter** Open the command pallette within visual studio code. (One way to do this is to select `View -> CommandPallette`.) Select `Python:Select Interpreter`. Choose the directory with the virtual environment you just created, `Python 3.12.5 ('.venv') ./.venv/bin/pythyon` if on a mac.
 
 **Pre-commit** Pre-commit runs the mypy static type checker and ruff. It also fixes common code style issues like removing trailing white space and tabs. The configuration file is `pre-commit-config.yaml`. I'm including this information as a stub for future semesters since I won't be enforcing pre-commit this semester.
 
