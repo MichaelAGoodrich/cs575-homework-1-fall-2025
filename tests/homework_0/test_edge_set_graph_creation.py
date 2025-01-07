@@ -31,7 +31,7 @@ def test_vertex_set_three_vertex_graph_creation() -> None:
     
     # Instantiate sets
     V: set[int] = {1,2,3}
-    E: set[set[int]] = {{1,2},{1,3}}
+    E: set[tuple[int,int]] = {(1,2),(1,3)}
 
     # when
     G = vertex_edge_sets_to_graph(V,E)

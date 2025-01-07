@@ -4,7 +4,6 @@ from matplotlib.axes import Axes
 import numpy as np
 from numpy.typing import NDArray
 from collections import Counter
-from typing import Tuple
 
 
 ####################
@@ -78,7 +77,7 @@ def _get_degree_count_dictionary(G: nx.Graph) -> dict[int,int]:
     """ Code adapted from Hands-On Graph Neural Networks
     Using Python by Maxime Labonne, chapter 6."""
     degree_list: list[int] = [y for (_,y) in G.degree]
-    degree_count: dict[int, int] = Counter(degree_list)
+    degree_count: dict[int, int] = dict(Counter(degree_list))
     return degree_count
 
 ####################
