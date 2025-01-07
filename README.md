@@ -52,6 +52,8 @@ On my machine, these packages installed in `.venv/lib/python3.12/site-packages`.
 
 **Select Python Interpreter** Open the command pallette within visual studio code. (One way to do this is to select `View -> CommandPallette`.) Select `Python:Select Interpreter`. Choose the directory with the virtual environment you just created, `Python 3.12.5 ('.venv') ./.venv/bin/pythyon` if on a mac.
 
+**Configure Tests** Open the command pallette within visual studio code. Select `Python:Configure Tests`. Select `pytest`, and then select the `tests` directory. You can then click on the test tube icon in visual studio code to inspect and run the tests. You'll look at the tests in the `homework_0` directory when you step through the Jupyter notebook tutorial, and you'll complete the tests in the `homework_1` directory when you do homework 1.
+
 **Pre-commit** Pre-commit runs the mypy static type checker and ruff. It also fixes common code style issues like removing trailing white space and tabs. The configuration file is `pre-commit-config.yaml`. I'm including this information as a stub for future semesters since I won't be enforcing pre-commit this semester.
 
 ---
