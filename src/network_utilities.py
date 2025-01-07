@@ -68,6 +68,7 @@ def show_digraph(G: nx.DiGraph) -> None:
 def vertex_edge_sets_to_graph(V: set[int], E: set[tuple[int]]) -> nx.Graph:
     if len(V) == 0:
         raise IllegalGraphRepresentation("Vertex set had no vertices")
+        
     # Create networkx graph
     G = nx.Graph()
     # Add vertices and edges
