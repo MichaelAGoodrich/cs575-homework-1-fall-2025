@@ -3,6 +3,8 @@ from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
 import numpy as np
 from numpy.typing import NDArray
+from collections import Counter
+from typing import Tuple
 
 
 ####################
@@ -61,6 +63,23 @@ def show_digraph(G: nx.DiGraph) -> None:
         width = 1
     )
     plt.show()
+
+def show_degree_distribution(G: nx.Graph) -> None:
+    """ Code adapted from Hands-On Graph Neural Networks
+    Using Python by Maxime Labonne, chapter 6."""
+    degree_count = _get_degree_count_dictionary(G)
+    _, ax = plt.subplots()
+    ax.set_xlabel('Node degree')
+    ax.set_ylabel('Number of nodes')
+    plt.bar([float(key) for key in degree_count.keys()],
+            [float(value) for value in degree_count.values()])
+    
+def _get_degree_count_dictionary(G: nx.Graph) -> dict[int,int]:
+    """ Code adapted from Hands-On Graph Neural Networks
+    Using Python by Maxime Labonne, chapter 6."""
+    degree_list: list[int] = [y for (_,y) in G.degree]
+    degree_count: dict[int, int] = Counter(degree_list)
+    return degree_count
 
 ####################
 ## Graph Creation ##
