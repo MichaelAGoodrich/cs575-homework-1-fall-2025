@@ -36,7 +36,7 @@ MANIFEST
 .vscode/
 
 # Answer key
-tests/answers.py
+tests/test_answers
 src/answer_key.ipynb
 
 # Installer logs
