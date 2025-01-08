@@ -37,6 +37,7 @@ MANIFEST
 
 # Answer key
 tests/answers.py
+src/answer_key.ipynb
 
 # Installer logs
 pip-log.txt

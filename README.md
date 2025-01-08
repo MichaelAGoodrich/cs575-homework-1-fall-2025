@@ -54,6 +54,8 @@ On my machine, these packages installed in `.venv/lib/python3.12/site-packages`.
 
 **Configure Tests** Open the command pallette within visual studio code. Select `Python:Configure Tests`. Select `pytest`, and then select the `tests` directory. You can then click on the test tube icon in visual studio code to inspect and run the tests. You'll look at the tests in the `homework_0` directory when you step through the Jupyter notebook tutorial, and you'll complete the tests in the `homework_1` directory when you do homework 1.
 
+I sometimes have a hard time getting vscode and pytest to play well together. The work around is to open a terminal in the root project directory and type `pytest tests` or `pytest tests/your_test_folder_name`. 
+
 **Pre-commit** Pre-commit runs the mypy static type checker and ruff. It also fixes common code style issues like removing trailing white space and tabs. The configuration file is `pre-commit-config.yaml`. I'm including this information as a stub for future semesters since I won't be enforcing pre-commit this semester.
 
 ---

@@ -83,18 +83,6 @@ def _get_degree_count_dictionary(G: nx.Graph) -> dict[int,int]:
     degree_count: dict[int, int] = dict(Counter(degree_list))
     return degree_count
 
-def _get_median_distances(G: nx.Graph) -> dict[int, float]:
-    """ Uses Floyd's algorithm to compute the distances between
-        each pair of vertices. Then, the median distance from
-        any vertex to all others is computed.
-
-        This implementation only works for undirected connected simple graphs
-    """
-    D: dict[int,dict[int,float]] = nx.floyd_warshall(G)
-    m = {key: float(np.median(list(dict(D[key]).values()))) for key in D.keys()}
-    return m
-
-
 ####################
 ## Graph Creation ##
 ####################
@@ -136,6 +124,9 @@ def adjacency_list_to_graph(adjacency_list: dict[int, set[int]]) -> nx.Graph:
     
     ## Create empty graph ##
     G = nx.Graph()
+
+    ## Add vertices to graph in order
+    G.add_nodes_from(sorted([vertex for vertex in adjacency_list.keys()]))
 
     ## Add edges from each vertex in adjacency list to all incident vertices
     for vertex1 in adjacency_list.keys():
