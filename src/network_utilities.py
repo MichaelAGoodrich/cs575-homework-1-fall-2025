@@ -72,13 +72,28 @@ def show_degree_distribution(G: nx.Graph) -> None:
     ax.set_ylabel('Number of nodes')
     plt.bar([float(key) for key in degree_count.keys()],
             [float(value) for value in degree_count.values()])
-    
+
+######################
+## Helper functions ##
+######################     
 def _get_degree_count_dictionary(G: nx.Graph) -> dict[int,int]:
     """ Code adapted from Hands-On Graph Neural Networks
     Using Python by Maxime Labonne, chapter 6."""
     degree_list: list[int] = [y for (_,y) in G.degree]
     degree_count: dict[int, int] = dict(Counter(degree_list))
     return degree_count
+
+def _get_median_distances(G: nx.Graph) -> dict[int, float]:
+    """ Uses Floyd's algorithm to compute the distances between
+        each pair of vertices. Then, the median distance from
+        any vertex to all others is computed.
+
+        This implementation only works for undirected connected simple graphs
+    """
+    D: dict[int,dict[int,float]] = nx.floyd_warshall(G)
+    m = {key: float(np.median(list(dict(D[key]).values()))) for key in D.keys()}
+    return m
+
 
 ####################
 ## Graph Creation ##
