@@ -36,8 +36,8 @@ MANIFEST
 .vscode/
 
 # Answer key
-tests/test_answers/
-src/answer_key.ipynb
+/tests/test_answers/
+/src/answer_key.ipynb
 
 # Installer logs
 pip-log.txt
