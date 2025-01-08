@@ -27,3 +27,6 @@ def test_homework_problem_4() -> None:
 
 def test_homework_problem_5() -> None:
     assert True
+
+def test_homework_problem_6() -> None:
+    assert True
