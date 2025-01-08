@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "class-exercises"
-description = "A collection of Jupyter notebooks for use in CS 575"
+description = "A collection of Jupyter notebooks and exercises for use in CS 575"
 version = "0.0.1"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -13,13 +13,9 @@ dependencies = [
 "matplotlib",
 "pydot",
 "ipykernel",
-#"graphviz",
-#"pygraphviz",
 "networkx",
-#"types-networks",
-"scipy",
-"python-louvain",
-#"scipy.cluster.hierarchy",
+#"scipy",
+#"python-louvain",
 ]
 
 

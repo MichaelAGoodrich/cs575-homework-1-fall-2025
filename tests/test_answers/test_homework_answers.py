@@ -11,7 +11,7 @@ def test_homework_problem_4() -> None:
                   [1., 2., 2., 1., 0.]])
 
     # Create graph
-    adjacency_list: dict[int, set[int]] = {1: {1,5},
+    adjacency_list: dict[int, set[int]] = {1: {2,5},
                                            2: {1,3},
                                            3: {2,4},
                                            4: {3,5},
