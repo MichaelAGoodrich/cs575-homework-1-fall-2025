@@ -66,17 +66,23 @@ def show_digraph(G: nx.DiGraph) -> None:
 def show_degree_distribution(G: nx.Graph) -> None:
     """ Code adapted from Hands-On Graph Neural Networks
     Using Python by Maxime Labonne, chapter 6."""
-    degree_count = _get_degree_count_dictionary(G)
+    degree_count = get_degree_count_dictionary(G)
     _, ax = plt.subplots()
     ax.set_xlabel('Node degree')
     ax.set_ylabel('Number of nodes')
-    plt.bar([float(key) for key in degree_count.keys()],
-            [float(value) for value in degree_count.values()])
+    degree_dict: dict[int,int] = {k : degree_count[k] 
+                                  if k in degree_count.keys() 
+                                  else 0 
+                                  for k in range(0,len(G.nodes())+1)}
+    plt.bar([float(key) for key in degree_dict.keys()],
+            [float(value) for value in degree_dict.values()])
+    #plt.bar([float(key) for key in degree_count.keys()],
+    #        [float(value) for value in degree_count.values()])
 
 ######################
 ## Helper functions ##
 ######################     
-def _get_degree_count_dictionary(G: nx.Graph) -> dict[int,int]:
+def get_degree_count_dictionary(G: nx.Graph) -> dict[int,int]:
     """ Code adapted from Hands-On Graph Neural Networks
     Using Python by Maxime Labonne, chapter 6."""
     degree_list: list[int] = [y for (_,y) in G.degree]
