@@ -7,6 +7,10 @@ January 2025
 
 ---
 
+### Clone the repository
+
+Once you've accepted the assignment, clone the repository. I'm assuming you can set up vscode and clone a repository from within vscode.
+
 ### Before Beginning
 
 **Virtual Environment.**
