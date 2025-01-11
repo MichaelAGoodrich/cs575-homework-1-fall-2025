@@ -1,7 +1,7 @@
 from network_utilities import adjacency_list_to_graph
 import networkx as nx
 
-def test_homework_problem_5() -> None:
+def test_homework_problem_6() -> None:
     # What I expect
     desired_diameter: int = 6
     desired_radius: int = 3

@@ -2,7 +2,7 @@ from network_utilities import adjacency_list_to_graph
 import networkx as nx
 import numpy as np
 
-def test_homework_problem_5() -> None:
+def test_homework_problem_7() -> None:
     # What I expect
     desired_number_nodes: int = 6
     desired_number_edges = 10
