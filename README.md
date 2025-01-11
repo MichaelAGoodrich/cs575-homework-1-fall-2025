@@ -26,10 +26,6 @@ You'll know this has worked if you see the command line prompt preceded by "(.ve
 
 To deactivate your virtual environment, type `deactivate`.
 
-**Create directories** Create a *src* directory and a *tests* directory
-- `mkdir src`
-- `mkdir tests`
-
 **Dependencies** This project has both required and optional dependencies. Both are specified in the file `pyproject.toml`. The optional dependencies aren't required for your code to run, but they are useful for doing good development. Run the following command from an integrated terminal: 
 
 `pip install --editable ".[dev]"` 
