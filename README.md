@@ -48,6 +48,11 @@ The mandatory dependencies are
 
 On my machine, these packages installed in `.venv/lib/python3.12/site-packages`. Note that the .gitignore file must say that files in the `.venv` directory should be ignored so that you don't try and upload those packages to the git cloud. 
 
+**Pain in the neck step**
+The best plotting in networkx uses `pydot` (or `pygraphviz`), so you'll need to be able to use those. Unfortunately, pydot requires `graphviz`, and this needs to be installed differently. On my mac, I used
+- `homebrew install graphviz`
+There is a good discussion on the class Discord channel on other ways to install it.
+
 **Warning** Avoid using pygraphviz on a mac. The linking required to code written in C is sensitive to specific mac configurations. It is much more simple to use pydot instead. 
 
 **Select Python Interpreter** Open the command pallette within visual studio code. (One way to do this is to select `View -> CommandPallette`.) Select `Python:Select Interpreter`. Choose the directory with the virtual environment you just created, `Python 3.12.5 ('.venv') ./.venv/bin/pythyon` if on a mac.
