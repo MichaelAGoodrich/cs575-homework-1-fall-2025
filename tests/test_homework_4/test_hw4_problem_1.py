@@ -1,6 +1,6 @@
 from SIR_model import SIR_simulation
 
-def test_hw4_problem1() -> None:
+def test_hw4_problem_1() -> None:
     # Question
     # For a population of at least 1000 and only one agent initially infections
     # select values for m, p, and gamma so that at the peak
