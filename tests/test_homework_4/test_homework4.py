@@ -77,7 +77,8 @@ def test_hw4_problem5() -> None:
     # Question
     # For a population of at least 1000 and only one agent initially infections
     # select values for m, p, and gamma so that at least 40% of the population is 
-    # never infectious and no more than 10% of the population is infectious at
+    # never infectious, at least 40% of the population has recovered,
+    # and no more than 10% of the population is infectious at
     # any one time. Set the simluation duration to 300.
     
     # What I expect
@@ -110,3 +111,5 @@ def test_hw4_problem5() -> None:
     assert infectious_history[0] <= 0.1*N
     susceptible_history = my_simulation.S
     assert susceptible_history[-1] >= 0.4*N
+    recovered_history = my_simulation.R
+    assert recovered_history[-1] >= 0.4*N
