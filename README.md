@@ -13,6 +13,17 @@ Once you've accepted the assignment, clone the repository. I'm assuming you can 
 
 ### Before Beginning
 
+**IDE and Global Packages**
+Do the following:
+- Make sure you have the latest version of vscode downloaded. Jupyter notebooks don't work with some older versions of vscode
+- The plotting routines we'll use in class require a package called `graphviz`. This needs to be installed globally. Open a terminal within vscode and try one of the following installation steps:
+  - If on mac, try `brew install graphviz`
+  - If on windows, try `winget install -e --id Graphviz.Graphviz` from PowerShell
+
+You might have to dig around and try other installations because these steps don't seem to work for all systems.
+
+
+
 **Virtual Environment.**
 All in-class code is intended to be run within an virtual environment. Execute the following:
 - Open a terminal in vscode
@@ -20,7 +31,7 @@ All in-class code is intended to be run within an virtual environment. Execute t
 - Install venv in the .venv directory from the project's root directory: `python3 -m venv .venv`
 - Activate the virtual environment. 
   - If on mac, this is done by: `source .venv/bin/activate`
-  - If on windows, this is done by `myenv\Scripts\activate`
+  - If on windows, this is done by `.venv\Scripts\activate`
 
 You'll know this has worked if you see the command line prompt preceded by "(.venv)". Note that you must deactivate `conda` if you are running it before activating your virtual environment.
 
