@@ -4,6 +4,7 @@ from matplotlib.axes import Axes
 import numpy as np
 from numpy.typing import NDArray
 from collections import Counter
+from typing import Tuple
 
 
 ####################
@@ -40,11 +41,40 @@ def show_graph(G: nx.Graph) -> None:
         alpha=0.8)
     plt.show()
 
+def show_graph_with_eigenvector_centrality(G: nx.Graph,
+                                           eigenvectors: NDArray
+                                           ) -> None:
+    """Code modified from copilot prompt how show data next to networkx nodes"""
+    node_positions: dict[int, tuple[float,float]] = nx.nx_pydot.graphviz_layout(G,prog='neato')
+    title: str = 'My graph with eigenvector centrality'
+    plt.figure()
+    ax: Axes = plt.gca()
+    ax.set_title(title)
+    nx.draw(G, 
+        node_positions, 
+        node_color = ['y' for node in G.nodes], 
+        with_labels = True, 
+        node_size = 300, 
+        alpha=0.8)
+    
+    xlow, xhigh = ax.get_xlim()
+    ylow, yhigh = ax.get_ylim()
+    xscale = (xhigh-xlow) * 0.05
+    yscale = (yhigh-ylow) * 0.05
+    
+    data = {node: eigenvectors[node-1] for node in G.nodes}
+    for node, (x, y) in node_positions.items():
+        plt.text(x  + xscale, y + yscale, 
+             s=data[node], 
+             bbox=dict(facecolor='red', alpha=0.5), 
+             horizontalalignment='center')
+
+    plt.show()
+
 def show_digraph(G: nx.DiGraph) -> None:
     node_positions: dict[int, tuple[float,float]] = nx.nx_pydot.graphviz_layout(G,prog='neato')
     title = 'My directed graph'
     plt.figure()
-    plt.clf()
     ax: Axes = plt.gca()
     ax.set_title(title)
     nx.draw_networkx_nodes(G, 
@@ -61,6 +91,34 @@ def show_digraph(G: nx.DiGraph) -> None:
         arrowsize = 20,
         width = 1
     )
+    plt.show()
+
+def show_digraph_with_edge_labels(G: nx.DiGraph, 
+                                  title: str,
+                                  edge_labels: dict[Tuple[int,int], float]) -> None:
+    node_positions: dict[int, tuple[float,float]] = nx.nx_pydot.graphviz_layout(G,prog='neato')
+    plt.figure()
+    ax: Axes = plt.gca()
+    ax.set_title(title)
+    nx.draw_networkx_nodes(G, 
+        node_positions, 
+        node_color = ['y' for node in G.nodes], 
+        node_size = 300, 
+        alpha=0.8)
+    nx.draw_networkx_labels(G, node_positions, font_size=15)
+    nx.draw_networkx_edges(G,
+        node_positions,
+        connectionstyle='arc3, rad=0.2',
+        arrows=True,
+        arrowsize = 20,
+        width = 1
+    )
+    nx.draw_networkx_edge_labels(G, 
+                                 node_positions,
+                                 edge_labels = edge_labels,
+                                 font_color='red',
+                                 label_pos=0.2,
+                                 font_size=6)
     plt.show()
 
 def show_degree_distribution(G: nx.Graph) -> None:
