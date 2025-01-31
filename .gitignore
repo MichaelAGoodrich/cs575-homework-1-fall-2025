@@ -39,6 +39,9 @@ MANIFEST
 tests/answers
 src/answer_key.ipynb
 
+# Some figures
+src/in_class_exercises/figures
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
