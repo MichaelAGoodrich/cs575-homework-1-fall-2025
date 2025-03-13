@@ -108,6 +108,54 @@ def show_partitions(G: nx.Graph,
     ax.set_title(title)
     ax.set_axis_off()
 
+def show_partitions_with_scaled_nodesize(G: nx.Graph,
+                    partition: Tuple[Set[Hashable], ...], 
+                    pos: dict[Hashable, Tuple[float, float]] | None = None,
+                    title: str = ""
+                    ) -> None:
+    """ 
+        Show the networkx graph with colors and edges indicating properties
+        of the partition. The node size is determined by node degree
+
+        Edges:
+        • Dashed lines indicate edges between nodes in different partitions
+        • Solid lines indicate edges between nodes in the same partition
+
+        Nodes:
+        • All nodes in the same partition get mapped to the same color
+        • When there are more partitions than ther are in the color pallette, repeat colors
+    """
+    #color_list = ['c','m','y','g','r']
+    color_list: list[str] = ['y', 'lightblue', 'violet', 'salmon', 
+                         'aquamarine', 'magenta', 'lightgray', 'linen']
+    plt.figure(figsize=(8.0,12.0))
+    ax: Axes = plt.gca()
+    if pos is None: 
+        #pos = nx.spring_layout(G, seed = 0)
+        pos = nx.nx_pydot.pydot_layout(G, prog = "neato")
+    for i in range(len(partition)):
+        nx.draw_networkx_nodes(partition[i],
+                               pos,
+                               node_color=color_list[i%len(color_list)], 
+                               alpha = 0.8,
+                               node_size=[50 + 150*nx.degree(G, node) for node in partition[i]])
+    for edge in G.edges:
+        draw_edge_by_type(G, pos, edge, partition)
+    nx.draw_networkx_labels(G,pos)
+    if len(G.edges) == 0:
+        mod = 0
+    else:
+        mod = nx.algorithms.community.quality.modularity(G,partition)
+    if title[-1] == ":" or title[-1] == "\n":
+        title = title + " groups=" + str(len(partition))
+    else:
+        title = title + ", groups=" + str(len(partition))
+    title = title + ", edges cut=" + str(count_edges_cut(G, partition))
+    title = title + ", mod = " + str(np.round(mod,2))
+
+    ax.set_title(title)
+    ax.set_axis_off()
+
 def show_dendrogram(G: nx.Graph,
                     title: str = "Dendrogram") -> None:
     plt.figure()
