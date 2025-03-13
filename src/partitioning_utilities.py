@@ -1,173 +1,14 @@
-#############################
-## Visualization Utilities ##
-#############################
-
-import matplotlib.pyplot as plt
-from matplotlib.axes import Axes
 import networkx as nx
 import numpy as np
 from numpy.typing import NDArray
 from typing import Hashable, Tuple, Set, List
-from dendrogram_handler_v2 import DendrogramHandler
-from scipy.cluster.hierarchy import dendrogram # type: ignore
 import random
 from scipy.sparse.linalg import eigsh
 from scipy.sparse import csr_matrix, diags
 from copy import deepcopy
 from typing import Callable as function
-
-
-def draw_edge_by_type(G: nx.Graph, 
-                      pos: dict[Hashable, Tuple[float, float]], 
-                      edge: Tuple[Hashable, Hashable], 
-                      partition: Tuple[Set[Hashable], ...]
-                      ) -> None:
-    """
-        Draw edges between nodes in different partitions using dashed lines.
-        Draw edges between nodes within the same partition using solid lines.
-    """
-    edge_style = 'dashed'
-    for part in partition:
-        if edge[0] in part and edge[1] in part:
-            edge_style = 'solid'
-            break
-    nx.draw_networkx_edges(G, pos, edgelist=[edge], style = edge_style)
-
-def count_edges_cut(G: nx.Graph,
-                    partition: Tuple[Set[Hashable], ...]
-                    ) -> int:
-    """ 
-        Count the number of edges cut if the nodes in graph G are split into 
-        the groups in the partition
-    """
-    cut_size:int = 0
-    for i in range(len(partition) - 1):
-        for j in range(i+1, len(partition)):
-            for u in partition[i]:
-                for v in G.neighbors(u):
-                    if v in partition[j]:
-                        cut_size += 1
-    return cut_size
-
-def show_graph(G: nx.Graph,
-                    pos: dict[Hashable, Tuple[float, float]] | None = None,
-                    title: str = ""
-                    ) -> None:
-    """ 
-        Show the networkx graph 
-    """
-    
-    if pos is None: 
-        #pos = nx.spring_layout(G, seed = 0)
-        pos = nx.nx_pydot.pydot_layout(G, prog = "neato")
-    nx.draw(G, pos, node_color = 'lightblue', alpha=0.8, with_labels=True)
-    plt.title(title)
-    plt.axis('off')
-
-def show_partitions(G: nx.Graph,
-                    partition: Tuple[Set[Hashable], ...], 
-                    pos: dict[Hashable, Tuple[float, float]] | None = None,
-                    title: str = ""
-                    ) -> None:
-    """ 
-        Show the networkx graph with colors and edges indicating properties
-        of the partition
-
-        Edges:
-        • Dashed lines indicate edges between nodes in different partitions
-        • Solid lines indicate edges between nodes in the same partition
-
-        Nodes:
-        • All nodes in the same partition get mapped to the same color
-        • When there are more partitions than ther are in the color pallette, repeat colors
-    """
-    #color_list = ['c','m','y','g','r']
-    color_list: list[str] = ['y', 'lightblue', 'violet', 'salmon', 
-                         'aquamarine', 'magenta', 'lightgray', 'linen']
-    plt.clf()
-    ax: Axes = plt.gca()
-    if pos is None: 
-        #pos = nx.spring_layout(G, seed = 0)
-        pos = nx.nx_pydot.pydot_layout(G, prog = "neato")
-    for i in range(len(partition)):
-        nx.draw_networkx_nodes(partition[i],pos,node_color=color_list[i%len(color_list)], alpha = 0.8)
-    for edge in G.edges:
-        draw_edge_by_type(G, pos, edge, partition)
-    nx.draw_networkx_labels(G,pos)
-    if len(G.edges) == 0:
-        mod = 0
-    else:
-        mod = nx.algorithms.community.quality.modularity(G,partition)
-    if title[-1] == ":" or title[-1] == "\n":
-        title = title + " groups=" + str(len(partition))
-    else:
-        title = title + ", groups=" + str(len(partition))
-    title = title + ", edges cut=" + str(count_edges_cut(G, partition))
-    title = title + ", mod = " + str(np.round(mod,2))
-
-    ax.set_title(title)
-    ax.set_axis_off()
-
-def show_partitions_with_scaled_nodesize(G: nx.Graph,
-                    partition: Tuple[Set[Hashable], ...], 
-                    pos: dict[Hashable, Tuple[float, float]] | None = None,
-                    title: str = ""
-                    ) -> None:
-    """ 
-        Show the networkx graph with colors and edges indicating properties
-        of the partition. The node size is determined by node degree
-
-        Edges:
-        • Dashed lines indicate edges between nodes in different partitions
-        • Solid lines indicate edges between nodes in the same partition
-
-        Nodes:
-        • All nodes in the same partition get mapped to the same color
-        • When there are more partitions than ther are in the color pallette, repeat colors
-    """
-    #color_list = ['c','m','y','g','r']
-    color_list: list[str] = ['y', 'lightblue', 'violet', 'salmon', 
-                         'aquamarine', 'magenta', 'lightgray', 'linen']
-    plt.figure(figsize=(8.0,12.0))
-    ax: Axes = plt.gca()
-    if pos is None: 
-        #pos = nx.spring_layout(G, seed = 0)
-        pos = nx.nx_pydot.pydot_layout(G, prog = "neato")
-    for i in range(len(partition)):
-        nx.draw_networkx_nodes(partition[i],
-                               pos,
-                               node_color=color_list[i%len(color_list)], 
-                               alpha = 0.8,
-                               node_size=[50 + 150*nx.degree(G, node) for node in partition[i]])
-    for edge in G.edges:
-        draw_edge_by_type(G, pos, edge, partition)
-    nx.draw_networkx_labels(G,pos)
-    if len(G.edges) == 0:
-        mod = 0
-    else:
-        mod = nx.algorithms.community.quality.modularity(G,partition)
-    if title[-1] == ":" or title[-1] == "\n":
-        title = title + " groups=" + str(len(partition))
-    else:
-        title = title + ", groups=" + str(len(partition))
-    title = title + ", edges cut=" + str(count_edges_cut(G, partition))
-    title = title + ", mod = " + str(np.round(mod,2))
-
-    ax.set_title(title)
-    ax.set_axis_off()
-
-def show_dendrogram(G: nx.Graph,
-                    title: str = "Dendrogram") -> None:
-    plt.figure()
-    myHandler: DendrogramHandler = DendrogramHandler(G)
-    Z = myHandler.link_matrix       # Python style guides suggest direct access of public class variables
-    ZLabels = myHandler.link_matrix_labels
-    #plt.figure(figureNumber);plt.clf()
-    dendrogram(Z, labels=ZLabels)
-    plt.title(title)
-    plt.xlabel("Node")
-    plt.ylabel("Number of nodes in cluster")
-    del myHandler
+from sklearn.cluster import KMeans
+from sklearn.manifold import TSNE
 
 
 ###############################################
@@ -392,7 +233,7 @@ def get_fiedler_eigenvector_sparse(L: csr_matrix) -> NDArray[np.float32]:
         degree one.
     """
     eigenvectors: NDArray[np.float32]
-    _, eigenvectors = eigsh(L, k=2, which="SM")  # Compute two smallest eigenvalues
+    _, eigenvectors = eigsh(L, k=2, which="SM")  # Compute two smallest eigenvalues: "SM" means "smallest magnitude"
     return eigenvectors[:, 1]  # Return the second smallest eigenvector
 
 def get_fiedler_eigenvector(Laplacian: NDArray[np.float32]
@@ -487,3 +328,60 @@ def get_shores_from_eigenvector_median(G: nx.Graph,
 
     return shore1, shore2
     
+##########################
+## Spectral Clustering  ##
+##########################
+
+def get_k_leading_eigenvectors_sparse(A: csr_matrix, k: int) -> NDArray[np.float32]:
+    """
+    Computes the eigenvectors corresponding to the largest k eigenvalues 
+    of a given sparse matrix. 
+        - The "LA" parameter of eigsh indicates "largest algebraic" 
+          which pulls out the eigenvalues with largest value (not
+          largest absolute value) 
+    This code was written using information from Copilot and ChatGPT
+    """
+    _, eigenvectors = eigsh(A, k=k, which="LA")
+    return np.asarray(eigenvectors, dtype=np.float32)
+
+def get_k_fiedler_eigenvectors_sparse(L: csr_matrix, k: int) -> NDArray[np.float32]:
+    """
+        Computes the numerically stable Fiedler eigenvectors for a given sparse 
+        Laplacian matrix. Generated by chatGPT in response to some numerical 
+        stability problems that arise when some of the vertices in the graph have 
+        degree one. Unlike the function above which just returns the fiedler eigenvector
+        this function can return more than the two smallest eigenvectors.
+
+        Assumes that the graph is connected so that there is only one eigenvalue
+        with value 0
+
+        Returns the k smallest nontrivial (lambda=0) eigenvectors. The first eigenvector
+        is not returned since it is zero.
+    """
+    # Ensure that k is not bigger than the number of possible non-zero eigenvalues
+    if k >= L.shape[0] - 1:
+        raise ValueError("k must be smaller than the dimension of the Laplacian.")
+    
+    _, eigenvectors = eigsh(L, k=k+1, which="SM")  # Compute two smallest eigenvalues: "SM" means "smallest magnitude"
+    return np.asarray(eigenvectors[:, 1:k+1], dtype=np.float32)  # Return the second smallest eigenvector
+
+def get_clusters(embedding: NDArray[np.float32], 
+                 num_clusters: int = 4
+                 ) -> KMeans:
+    kmeans = KMeans(
+        init="random",
+        n_clusters=num_clusters,
+        n_init=10,
+        random_state=1234
+        )
+    kmeans.fit(embedding)
+    return kmeans
+
+def get_colors_from_clusters(embedding: NDArray[np.float32], 
+                             num_clusters: int = 4
+                             ) -> list[str]:
+    kmeans = get_clusters(embedding, num_clusters=num_clusters)
+    labels = kmeans.labels_
+    color_template = ['y', 'c', 'm', 'k', 'red', 'green', 'lightblue']
+    color: list[str] = [color_template[x] for x in list(labels) ]
+    return color

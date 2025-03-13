@@ -1,0 +1,250 @@
+import matplotlib.pyplot as plt
+from matplotlib.axes import Axes
+import networkx as nx
+import numpy as np
+from numpy.typing import NDArray
+from typing import Hashable, Tuple, Set, List
+from dendrogram_handler_v2 import DendrogramHandler
+from scipy.cluster.hierarchy import dendrogram # type: ignore
+from matplotlib.lines import Line2D
+from collections import defaultdict
+
+#######################
+## Drawing Utilities ##
+#######################
+
+def draw_edge_by_type(G: nx.Graph, 
+                      pos: dict[Hashable, Tuple[float, float]], 
+                      edge: Tuple[Hashable, Hashable], 
+                      partition: Tuple[Set[Hashable], ...]
+                      ) -> None:
+    """
+        Draw edges between nodes in different partitions using dashed lines.
+        Draw edges between nodes within the same partition using solid lines.
+    """
+    edge_style = 'dashed'
+    for part in partition:
+        if edge[0] in part and edge[1] in part:
+            edge_style = 'solid'
+            break
+    nx.draw_networkx_edges(G, pos, edgelist=[edge], style = edge_style)
+
+def count_edges_cut(G: nx.Graph,
+                    partition: Tuple[Set[Hashable], ...]
+                    ) -> int:
+    """ 
+        Count the number of edges cut if the nodes in graph G are split into 
+        the groups in the partition
+    """
+    cut_size:int = 0
+    for i in range(len(partition) - 1):
+        for j in range(i+1, len(partition)):
+            for u in partition[i]:
+                for v in G.neighbors(u):
+                    if v in partition[j]:
+                        cut_size += 1
+    return cut_size
+
+def show_graph(G: nx.Graph,
+                    pos: dict[Hashable, Tuple[float, float]] | None = None,
+                    title: str = ""
+                    ) -> None:
+    """ 
+        Show the networkx graph 
+    """
+    
+    if pos is None: 
+        #pos = nx.spring_layout(G, seed = 0)
+        pos = nx.nx_pydot.pydot_layout(G, prog = "neato")
+    nx.draw(G, pos, node_color = 'lightblue', alpha=0.8, with_labels=True)
+    plt.title(title)
+    plt.axis('off')
+
+def show_partitions(G: nx.Graph,
+                    partition: Tuple[Set[Hashable], ...], 
+                    pos: dict[Hashable, Tuple[float, float]] | None = None,
+                    title: str = ""
+                    ) -> None:
+    """ 
+        Show the networkx graph with colors and edges indicating properties
+        of the partition
+
+        Edges:
+        • Dashed lines indicate edges between nodes in different partitions
+        • Solid lines indicate edges between nodes in the same partition
+
+        Nodes:
+        • All nodes in the same partition get mapped to the same color
+        • When there are more partitions than ther are in the color pallette, repeat colors
+    """
+    #color_list = ['c','m','y','g','r']
+    color_list: list[str] = ['y', 'lightblue', 'violet', 'salmon', 
+                         'aquamarine', 'magenta', 'lightgray', 'linen']
+    plt.clf()
+    ax: Axes = plt.gca()
+    if pos is None: 
+        #pos = nx.spring_layout(G, seed = 0)
+        pos = nx.nx_pydot.pydot_layout(G, prog = "neato")
+    for i in range(len(partition)):
+        nx.draw_networkx_nodes(partition[i],pos,node_color=color_list[i%len(color_list)], alpha = 0.8)
+    for edge in G.edges:
+        draw_edge_by_type(G, pos, edge, partition)
+    nx.draw_networkx_labels(G,pos)
+    if len(G.edges) == 0:
+        mod = 0
+    else:
+        mod = nx.algorithms.community.quality.modularity(G,partition)
+    if title[-1] == ":" or title[-1] == "\n":
+        title = title + " groups=" + str(len(partition))
+    else:
+        title = title + ", groups=" + str(len(partition))
+    title = title + ", edges cut=" + str(count_edges_cut(G, partition))
+    title = title + ", mod = " + str(np.round(mod,2))
+
+    ax.set_title(title)
+    ax.set_axis_off()
+
+def show_partitions_with_scaled_nodesize(G: nx.Graph,
+                    partition: Tuple[Set[Hashable], ...], 
+                    pos: dict[Hashable, Tuple[float, float]] | None = None,
+                    title: str = ""
+                    ) -> None:
+    """ 
+        Show the networkx graph with colors and edges indicating properties
+        of the partition. The node size is determined by node degree
+
+        Edges:
+        • Dashed lines indicate edges between nodes in different partitions
+        • Solid lines indicate edges between nodes in the same partition
+
+        Nodes:
+        • All nodes in the same partition get mapped to the same color
+        • When there are more partitions than ther are in the color pallette, repeat colors
+    """
+    #color_list = ['c','m','y','g','r']
+    color_list: list[str] = ['y', 'lightblue', 'violet', 'salmon', 
+                         'aquamarine', 'magenta', 'lightgray', 'linen']
+    plt.figure(figsize=(8.0,12.0))
+    ax: Axes = plt.gca()
+    if pos is None: 
+        #pos = nx.spring_layout(G, seed = 0)
+        pos = nx.nx_pydot.pydot_layout(G, prog = "neato")
+    for i in range(len(partition)):
+        nx.draw_networkx_nodes(partition[i],
+                               pos,
+                               node_color=color_list[i%len(color_list)], 
+                               alpha = 0.8,
+                               node_size=[50 + 150*nx.degree(G, node) for node in partition[i]])
+    for edge in G.edges:
+        draw_edge_by_type(G, pos, edge, partition)
+    nx.draw_networkx_labels(G,pos)
+    if len(G.edges) == 0:
+        mod = 0
+    else:
+        mod = nx.algorithms.community.quality.modularity(G,partition)
+    if title[-1] == ":" or title[-1] == "\n":
+        title = title + " groups=" + str(len(partition))
+    else:
+        title = title + ", groups=" + str(len(partition))
+    title = title + ", edges cut=" + str(count_edges_cut(G, partition))
+    title = title + ", mod = " + str(np.round(mod,2))
+
+    ax.set_title(title)
+    ax.set_axis_off()
+
+def show_dendrogram(G: nx.Graph,
+                    title: str = "Dendrogram") -> None:
+    plt.figure()
+    myHandler: DendrogramHandler = DendrogramHandler(G)
+    Z = myHandler.link_matrix       # Python style guides suggest direct access of public class variables
+    ZLabels = myHandler.link_matrix_labels
+    #plt.figure(figureNumber);plt.clf()
+    dendrogram(Z, labels=ZLabels)
+    plt.title(title)
+    plt.xlabel("Node")
+    plt.ylabel("Number of nodes in cluster")
+    del myHandler
+
+def show_kCores(G: nx.Graph,
+                title: str = "K-core of Network"
+                ) -> None:
+    """ Visualize by k-cores. 
+    Thanks to [Corralien's response on stackoverflow]
+    (https://stackoverflow.com/questions/70297329/visualization-of-k-cores-using-networkx).
+    """
+    # build a dictionary of k-level with the list of nodes
+    kcores = defaultdict(list)
+    for n, k in nx.core_number(G).items():
+        kcores[k].append(n)
+
+    # compute position of each node with shell layout
+    nlist = []
+    for k in sorted(kcores.keys(),reverse=True):
+        nlist.append(kcores[k])
+    pos = nx.layout.shell_layout(G, nlist = nlist)
+    colors = ['black','lightblue','yellow','magenta','olive', 'cyan']
+    legend_elements = []
+
+    # draw nodes, edges and labels
+    for kcore in sorted(list(kcores.keys()),reverse = True):
+        nodes = kcores[kcore]
+        nx.draw_networkx_nodes(G, pos, nodelist=nodes, node_color=colors[kcore%len(colors)])
+        label = f"kcore = {kcore}"
+        color = colors[kcore%len(colors)]
+        legend_elements.append(Line2D([0], [0], marker='o', color=color, label=label,markerfacecolor=color, markersize=15))
+    nx.draw_networkx_edges(G, pos, width=0.2)
+    nx.draw_networkx_labels(G, pos)
+    plt.title(title)
+    plt.legend(handles = legend_elements, loc = 'best')
+
+def show_kCores_by_partition(G:nx.Graph, 
+                             colors: list[str], 
+                             title: str = "K-core of Network"
+                             ) -> None:
+    """ Visualize by k-cores. 
+    Thanks to [Corralien's response on stackoverflow]
+    (https://stackoverflow.com/questions/70297329/visualization-of-k-cores-using-networkx).
+    """
+    # build a dictionary of k-level with the list of nodes
+    kcores = defaultdict(list)
+    for n, k in nx.core_number(G).items():
+        kcores[k].append(n)
+
+    # Shapes
+    shapes = ["o", "v", "s", "*", "+", "d"]
+
+    # compute position of each node with shell layout
+    nlist = []
+    for k in sorted(kcores.keys(),reverse=True):
+        nlist.append(kcores[k])
+    pos = nx.layout.shell_layout(G, nlist = nlist)
+    legend_elements = []
+
+    # draw nodes, edges and labels
+    for kcore in sorted(kcores.keys(),reverse=True):
+        nodes = kcores[kcore]
+        shape = shapes[kcore%len(shapes)]
+        
+        #nx.draw_networkx_nodes(self.G, pos, nodelist=nodes, node_color=colors[nodes[0]], node_shape=shape, alpha = 0.5, node_size=90)
+        for node in nodes:
+            nx.draw_networkx_nodes(G, pos, nodelist=[node], node_color=colors[node], node_shape=shape, alpha = 0.5, node_size=90)
+        label = f"kcore = {kcore}"
+        legend_elements.append(Line2D([0], [0], marker=shape, color='k', markerfacecolor = 'w', label=label, markersize=10))
+    
+    nx.draw_networkx_edges(G, pos, width=0.1)
+    #nx.draw_networkx_labels(self.G, pos)
+    plt.title(title)
+    plt.legend(handles = legend_elements, loc = 'best')
+
+def show_2D_scatterplot(vector1: NDArray[np.float32],
+                        vector2: NDArray[np.float32],
+                        colors: list[str],
+                        xlabel: str = "values of first eigenvector",
+                        ylabel: str = "values of second eigenvector",
+                        title: str = "Clusters of L or M"
+                        ) -> None:
+    
+    plt.scatter(vector1, vector2,s=100,alpha = 0.8, color = colors)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title)  
