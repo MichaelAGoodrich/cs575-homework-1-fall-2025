@@ -269,6 +269,7 @@ class AssortativeMixing:
                         # Notice that we have to check whether eigher order of the edge is in
                         # the set of edges to add since the graph is undirected
                         break
+            
             if failed_attempt:
                 # If I've tried hard to add an edge but run into problems, remove a random edge and try again
                 edge = random.choice(edges_to_add)
