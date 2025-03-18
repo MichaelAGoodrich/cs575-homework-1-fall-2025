@@ -14,7 +14,8 @@ dependencies = [
 "pydot",
 "ipykernel",
 "networkx",
-#"scipy",
+"pandas",
+"scipy",
 #"python-louvain",
 ]
 

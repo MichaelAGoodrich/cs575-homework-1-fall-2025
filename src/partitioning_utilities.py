@@ -8,7 +8,7 @@ from scipy.sparse import csr_matrix, diags
 from copy import deepcopy
 from typing import Callable as function
 from sklearn.cluster import KMeans
-from sklearn.manifold import TSNE
+
 
 
 ###############################################
@@ -48,8 +48,8 @@ def swap_shores(partition: Tuple[Set[Hashable], Set[Hashable]],
     return (shore1, shore2)
 
 def find_best_node_to_swap(G: nx.Graph,
-                           partition: Tuple[Set, Set],
-                           already_swapped: Set
+                           partition: Tuple[Set[Hashable], Set[Hashable]],
+                           already_swapped: Set[Hashable]
                            ) -> Hashable | None:
     best_mod: float = -np.inf
     # Node that produces the highest modularity increase if it swaps shores

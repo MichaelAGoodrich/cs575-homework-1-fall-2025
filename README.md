@@ -54,8 +54,8 @@ The mandatory dependencies are
 - numpy
 - matplotlib (pyplot)
 - ipykernel (for Jupyter notebooks)
-- scipy.cluster.hierarchy (to show dendrograms for future homework)
-- python-louvain (to find communities using the Louvain algorithm for future homework)
+- scipy 
+- pandas
 
 On my machine, these packages installed in `.venv/lib/python3.12/site-packages`. Note that the .gitignore file must say that files in the `.venv` directory should be ignored so that you don't try and upload those packages to the git cloud. 
 
