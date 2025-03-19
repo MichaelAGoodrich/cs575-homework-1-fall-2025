@@ -39,8 +39,9 @@ MANIFEST
 tests/answers
 src/answer_key.ipynb
 
-# Some figures
+# Some figures and odd files
 src/in_class_exercises/figures
+src/old
 
 # Installer logs
 pip-log.txt

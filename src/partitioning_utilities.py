@@ -335,13 +335,16 @@ def get_shores_from_eigenvector_median(G: nx.Graph,
 def get_k_leading_eigenvectors_sparse(A: csr_matrix, k: int) -> NDArray[np.float32]:
     """
     Computes the eigenvectors corresponding to the largest k eigenvalues 
-    of a given sparse matrix. 
-        - The "LA" parameter of eigsh indicates "largest algebraic" 
+    of a given sparse matrix.
+        - The "LM" parameter of eigsh indicates "largest algebraic" 
+          which pulls out the eigenvalues with largest value (not
+          largest absolute value) 
+        - Use the "LA" parameter of eigsh if you want the "largest algebraic" 
           which pulls out the eigenvalues with largest value (not
           largest absolute value) 
     This code was written using information from Copilot and ChatGPT
     """
-    _, eigenvectors = eigsh(A, k=k, which="LA")
+    _, eigenvectors = eigsh(A, k=k, which="LM")
     return np.asarray(eigenvectors, dtype=np.float32)
 
 def get_k_fiedler_eigenvectors_sparse(L: csr_matrix, k: int) -> NDArray[np.float32]:

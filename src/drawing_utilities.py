@@ -3,8 +3,8 @@ from matplotlib.axes import Axes
 import networkx as nx
 import numpy as np
 from numpy.typing import NDArray
-from typing import Hashable, Tuple, Set, List
-from dendrogram_handler_v2 import DendrogramHandler
+from typing import Hashable, Tuple, Set
+from dendrogram_handler import DendrogramHandler
 from scipy.cluster.hierarchy import dendrogram # type: ignore
 from matplotlib.lines import Line2D
 from collections import defaultdict

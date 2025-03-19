@@ -1,6 +1,6 @@
 import networkx as nx # type:ignore
-from dendrogram_handler_v2 import DendrogramHandler # type:ignore
-from dendrogram_handler_v2 import Group
+from dendrogram_handler import DendrogramHandler # type:ignore
+from dendrogram_handler import Group
 
 G: nx.Graph = nx.path_graph(5)
 # The communities for this five-node line graph are
