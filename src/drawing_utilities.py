@@ -124,7 +124,7 @@ def show_partitions_with_scaled_nodesize(G: nx.Graph,
     #color_list = ['c','m','y','g','r']
     color_list: list[str] = ['y', 'lightblue', 'violet', 'salmon', 
                          'aquamarine', 'magenta', 'lightgray', 'linen']
-    plt.figure(figsize=(8.0,12.0))
+    plt.figure(figsize=(8.0,8))
     ax: Axes = plt.gca()
     if pos is None: 
         #pos = nx.spring_layout(G, seed = 0)
@@ -248,3 +248,34 @@ def show_2D_scatterplot(vector1: NDArray[np.float32],
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.title(title)  
+
+def show_node_probability(G:nx.Graph,
+                          probabilities: list[float],
+                          title: str ="karate network",
+                          show_scale: bool = False, 
+                          show_degree_as_size: bool = False, 
+                          show_labels: bool = True
+                          ) -> None:
+    pos: dict[Hashable, tuple[float, float]] = nx.nx_pydot.graphviz_layout(G, prog = "neato")
+    plt.figure()
+    plt.axis('off')
+    plt.title(title)
+    
+    # C style type declaration
+    my_node_size: list[int]
+    
+    if show_degree_as_size:
+        my_node_size = [50 + 150*k for k in dict(G.degree).values()]
+    else: 
+        my_node_size = [200 for _ in G.nodes()]
+    nx.draw_networkx(G, 
+                 pos = pos,
+                 node_color=probabilities,
+                 node_size=my_node_size,
+                 cmap='cool',
+                 font_size=9,
+                 font_color='white',
+                 with_labels=show_labels)
+    if show_scale:
+        sm = plt.cm.ScalarMappable(cmap = 'cool',norm=plt.Normalize(vmin = 0, vmax=max(probabilities)))
+        _ = plt.colorbar(sm, ax=plt.gca())

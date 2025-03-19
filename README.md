@@ -56,6 +56,7 @@ The mandatory dependencies are
 - ipykernel (for Jupyter notebooks)
 - scipy 
 - pandas
+- gensim
 
 On my machine, these packages installed in `.venv/lib/python3.12/site-packages`. Note that the .gitignore file must say that files in the `.venv` directory should be ignored so that you don't try and upload those packages to the git cloud. 
 

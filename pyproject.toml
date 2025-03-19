@@ -16,6 +16,7 @@ dependencies = [
 "networkx",
 "pandas",
 "scipy",
+"gensim",
 #"python-louvain",
 ]
 
