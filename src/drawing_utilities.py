@@ -55,7 +55,8 @@ def show_graph(G: nx.Graph,
     
     if pos is None: 
         #pos = nx.spring_layout(G, seed = 0)
-        pos = nx.nx_pydot.pydot_layout(G, prog = "neato")
+        #pos = nx.nx_pydot.pydot_layout(G, prog = "neato")
+        pos = nx.nx_pydot.graphviz_layout(G, prog = "neato")
     nx.draw(G, pos, node_color = 'lightblue', alpha=0.8, with_labels=True)
     plt.title(title)
     plt.axis('off')
@@ -84,7 +85,8 @@ def show_partitions(G: nx.Graph,
     ax: Axes = plt.gca()
     if pos is None: 
         #pos = nx.spring_layout(G, seed = 0)
-        pos = nx.nx_pydot.pydot_layout(G, prog = "neato")
+        pos = nx.nx_pydot.graphviz_layout(G, prog = "neato")
+        #pos = nx.nx_pydot.pydot_layout(G, prog = "neato")
     for i in range(len(partition)):
         nx.draw_networkx_nodes(partition[i],pos,node_color=color_list[i%len(color_list)], alpha = 0.8)
     for edge in G.edges:
@@ -182,20 +184,21 @@ def show_kCores(G: nx.Graph,
     for k in sorted(kcores.keys(),reverse=True):
         nlist.append(kcores[k])
     pos = nx.layout.shell_layout(G, nlist = nlist)
-    colors = ['black','lightblue','yellow','magenta','olive', 'cyan']
+    colors = ['y', 'lightblue', 'violet', 'salmon', 'aquamarine', 'magenta', 'lightgray', 'linen','green','lightblue','olive', 'cyan', 'b']
     legend_elements = []
 
     # draw nodes, edges and labels
-    for kcore in sorted(list(kcores.keys()),reverse = True):
+    for i, kcore in enumerate(sorted(list(kcores.keys()),reverse = True)):
         nodes = kcores[kcore]
-        nx.draw_networkx_nodes(G, pos, nodelist=nodes, node_color=colors[kcore%len(colors)])
+        nx.draw_networkx_nodes(G, pos, nodelist=nodes, node_color=colors[i%len(colors)], alpha=0.5)
         label = f"kcore = {kcore}"
-        color = colors[kcore%len(colors)]
+        color = colors[i%len(colors)]
         legend_elements.append(Line2D([0], [0], marker='o', color=color, label=label,markerfacecolor=color, markersize=15))
-    nx.draw_networkx_edges(G, pos, width=0.2)
-    nx.draw_networkx_labels(G, pos)
+    nx.draw_networkx_edges(G, pos, width=0.3, edge_color='lightgray')
+    #nx.draw_networkx_labels(G, pos)
     plt.title(title)
     plt.legend(handles = legend_elements, loc = 'best')
+    plt.axis('off')
 
 def show_kCores_by_partition(G:nx.Graph, 
                              colors: list[str], 
@@ -278,4 +281,35 @@ def show_node_probability(G:nx.Graph,
                  with_labels=show_labels)
     if show_scale:
         sm = plt.cm.ScalarMappable(cmap = 'cool',norm=plt.Normalize(vmin = 0, vmax=max(probabilities)))
+        _ = plt.colorbar(sm, ax=plt.gca())
+
+def show_graph_by_pagerank(G:nx.Graph,
+                          title: str ="Graph nodes by page rank",
+                          pos: dict[Hashable,tuple[float,float]] | None = None,
+                          show_scale: bool = False,  
+                          show_labels: bool = True
+                          ) -> None:
+    if pos is None:
+        pos = nx.nx_pydot.graphviz_layout(G, prog = "neato")
+    plt.figure()
+    plt.axis('off')
+    plt.title(title)
+
+    pageranks = nx.pagerank(G)
+    node_values: list[float] = [float(v) for v in pageranks.values()]
+    
+    # C style type declaration
+    my_node_size: list[int]
+    my_node_size = [20 for _ in G.nodes()]
+    nx.draw_networkx(G, 
+                 pos = pos,
+                 node_color=node_values,
+                 node_size=my_node_size,
+                 cmap='cool',
+                 font_size=9,
+                 font_color='white',
+                 with_labels=show_labels,
+                 alpha = 0.5)
+    if show_scale:
+        sm = plt.cm.ScalarMappable(cmap = 'cool',norm=plt.Normalize(vmin = min(node_values), vmax=max(node_values)))
         _ = plt.colorbar(sm, ax=plt.gca())
