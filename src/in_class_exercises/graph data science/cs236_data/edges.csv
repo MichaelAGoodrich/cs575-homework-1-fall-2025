@@ -2094,7 +2094,7 @@ I tried using the x64 bit installer, could that be the issue? I did verify that 
 236,522,posted_in_thread,thanks!
 236,314,posted_in_thread,awesome thanks!
 236,143,posted_in_thread,"Got it, so ```C:\Users\Zac\AppData\Local\Programs\Python\Python311\Scripts```"
-101,15,posted_in_thread,🍞
+101,15,posted_in_thread,emoji
 101,29,posted_in_channel,"I ended up splitting it up line by line, but just iterated over all the characters and the FSA would determine how many characters to erase from the line when a token was detected.
 
 Like here is an example:

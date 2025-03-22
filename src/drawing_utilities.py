@@ -290,7 +290,11 @@ def show_graph_by_pagerank(G:nx.Graph,
                           show_labels: bool = True
                           ) -> None:
     if pos is None:
-        pos = nx.nx_pydot.graphviz_layout(G, prog = "neato")
+        try:
+            pos = nx.nx_pydot.graphviz_layout(G, prog="neato")
+        except Exception as e:
+            print(f"Graphviz layout failed, falling back to spring_layout: {e}")
+    pos = nx.spring_layout(G, seed=42)
     plt.figure()
     plt.axis('off')
     plt.title(title)
