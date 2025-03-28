@@ -646,7 +646,7 @@ from .token import Token"
 247,290,posted_in_thread,"Importantly, you can find a lot of examples with explanations you can learn from and copy-paste in the jupiter notebook. I'd read through that to make sure I understand everything. 
 
 And any function with a ... in it is meant to be completed by you"
-247,291,posted_in_thread,"Yeah Porter is totally right on this, you read in a string, find the first token, and cut the first token out of the string. I did it line by line since I don't think we need to do block comments.
+247,291,posted_in_thread,"Yeah <student>is totally right on this, you read in a string, find the first token, and cut the first token out of the string. I did it line by line since I don't think we need to do block comments.
 
 Something that will make the later FSA *much* easier is to track the exact string you're reading. Not necessary for the strings that are always the same, but important for the other ones."
 247,47,posted_in_channel,Should we just drop project2's stuff into the project-1-me folder?
@@ -1126,7 +1126,7 @@ not your explanation I just wonder why it is not left to right like regular alge
 60,150,replied_to,Did you get it figured out? I have the same issue (struggling with trivial scc)
 60,91,posted_in_channel,Did you get it figured out? I have the same issue (struggling with trivial scc)
 60,269,posted_in_thread,Are you printing the output instead of returning a string?
-60,105,posted_in_channel,"Similar to Hannah, it looks like my exam is one that had a learning suite issue (I think it's because I copied and pasted some of the symbols from the given grammar). I can send a picture of my answer as well"
+60,105,posted_in_channel,"Similar to <studeng>, it looks like my exam is one that had a learning suite issue (I think it's because I copied and pasted some of the symbols from the given grammar). I can send a picture of my answer as well"
 60,387,posted_in_thread,I think Prof Goodrich gave the example of evaluating `G(F(x))` you'd evaluate `F(x)` first and it's on the right hand side
 60,388,posted_in_thread,I also got that
 60,389,posted_in_thread,"The first one is `<-` (basically `=` in python, it's the assignment operator), the second is `^`"
